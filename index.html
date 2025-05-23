@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hollow Dobt</title>
+    <link rel="icon" href="./assets/favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link href="./dist/output.css" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      body {
+        font-family: "Quicksand", sans-serif;
+        backdrop-filter: blur(10px);
+      }
+      canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <body
+    class="dark text-white flex items-center justify-center min-h-screen overflow-hidden"
+    style="background-color: #17181c"
+  >
+    <!-- 背景动画 -->
+    <canvas id="fishCanvas"></canvas>
+
+    <!-- 主体内容：抬高位置 -->
+    <div class="max-w-md w-full px-6 text-center -mt-12">
+      <!-- 头像 -->
+      <img
+        src="./assets/star-bg.png"
+        alt="Avatar"
+        class="w-24 h-24 rounded-full object-cover mx-auto shadow-[0_0_30px_rgba(0,0,0,0.4)] mb-4"
+      />
+
+      <!-- 名字 & 签名 -->
+      <h1 class="text-3xl font-semibold">Hollow Dobt</h1>
+      <p class="text-gray-400 mt-2">Flowers' fade, leaves' birth</p>
+
+      <!-- 分割线 -->
+      <div class="my-6 mx-auto border-t border-gray-600 w-[208px]"></div>
+
+      <!-- 图标按钮组 -->
+      <div class="flex justify-center gap-4">
+        <div class="relative group">
+          <a
+            href="https://github.com/yourusername"
+            target="_blank"
+            class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 shadow hover:shadow-lg transition"
+          >
+            <i data-lucide="github" class="w-5 h-5 text-white"></i>
+          </a>
+          <span
+            class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs rounded bg-black text-white opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-10"
+          >
+            GitHub
+          </span>
+        </div>
+        <div class="relative group">
+          <a
+            href="mailto:you@example.com"
+            class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 shadow hover:shadow-lg transition"
+          >
+            <i data-lucide="mail" class="w-5 h-5 text-white"></i>
+          </a>
+          <span
+            class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs rounded bg-black text-white opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-10"
+          >
+            Email
+          </span>
+        </div>
+        <div class="relative group">
+          <a
+            href="#"
+            class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 shadow hover:shadow-lg transition"
+          >
+            <i data-lucide="briefcase" class="w-5 h-5 text-white"></i>
+          </a>
+          <span
+            class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs rounded bg-black text-white opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-10"
+          >
+            Blog
+          </span>
+        </div>
+        <div class="relative group">
+          <a
+            href="./blog.html"
+            class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 shadow hover:shadow-lg transition"
+          >
+            <i data-lucide="book" class="w-5 h-5 text-white"></i>
+          </a>
+          <span
+            class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs rounded bg-black text-white opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-10"
+          >
+            Database
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 脚本加载：fish 动画 + lucide icons -->
+    <script>
+      lucide.createIcons();
+
+      const canvas = document.getElementById("fishCanvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+
+      class Fish {
+        constructor() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = 10 + Math.random() * 10;
+          this.speedY = 0.5 + Math.random() * 1.5;
+          this.color = `rgba(255,255,255,${Math.random() * 0.6 + 0.3})`;
+        }
+        update() {
+          this.y += this.speedY;
+          if (this.y > canvas.height + this.size) this.y = -this.size;
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.ellipse(
+            this.x,
+            this.y,
+            this.size,
+            this.size / 2,
+            0,
+            0,
+            Math.PI * 2,
+          );
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        }
+      }
+
+      const fishArray = Array.from({ length: 30 }, () => new Fish());
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        fishArray.forEach((fish) => {
+          fish.update();
+          fish.draw();
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+    </script>
+  </body>
+</html>

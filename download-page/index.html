@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en" class="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Downloads Page - Hollow Dobt</title>
+        <link rel="icon" href="./assets/favicon.png" />
+        <link href="https://cdn.jsdelivr.net/npm/cn-fontsource-lxgw-wen-kai-gb-screen@1.0.6/font.css" rel="stylesheet" />
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <style>
+            body {
+                font-family: "LXGW WenKai GB Screen", sans-serif;
+                backdrop-filter: blur(10px);
+                margin: 0;
+                padding: 0;
+                min-height: 100vh;
+                overflow-x: hidden;
+            }
+            .rain-background {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+                background-image: url('./rain.svg');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+            }
+            .container {
+                max-width: 1024px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            .header {
+                text-align: center;
+                margin-bottom: 40px;
+                padding: 20px 0;
+            }
+            .download-item {
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 12px;
+                padding: 20px;
+                margin-bottom: 16px;
+                transition: all 0.3s ease;
+                backdrop-filter: blur(10px);
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+            .download-item:hover {
+                background: rgba(255, 255, 255, 0.08);
+                border-color: rgba(255, 255, 255, 0.2);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            }
+            .item-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 12px;
+            }
+            .item-content {
+                flex: 1;
+                min-width: 0;
+            }
+            .item-title {
+                font-size: 18px;
+                font-weight: 600;
+                color: #ffffff;
+                margin: 0;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .item-version {
+                background: rgba(34, 197, 94, 0.2);
+                color: #22c55e;
+                padding: 4px 8px;
+                border-radius: 6px;
+                font-size: 12px;
+                font-weight: 600;
+            }
+            .item-description {
+                color: #9ca3af;
+                margin-bottom: 16px;
+                font-size: 14px;
+                line-height: 1.5;
+            }
+            .item-meta {
+                display: flex;
+                gap: 16px;
+                margin-bottom: 0;
+                flex-wrap: wrap;
+            }
+            .meta-item {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                color: #6b7280;
+                font-size: 12px;
+            }
+            .download-buttons {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+                flex-shrink: 0;
+                align-items: center;
+            }
+            .download-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 16px;
+                background: rgba(34, 197, 94, 0.1);
+                color: #22c55e;
+                text-decoration: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 500;
+                border: 1px solid rgba(34, 197, 94, 0.2);
+                transition: all 0.2s ease;
+                white-space: nowrap;
+            }
+            .download-btn:hover {
+                background: rgba(34, 197, 94, 0.2);
+                border-color: rgba(34, 197, 94, 0.4);
+                transform: translateY(-1px);
+            }
+            .download-btn.primary {
+                background: #22c55e;
+                color: white;
+                border-color: #22c55e;
+            }
+            .download-btn.primary:hover {
+                background: #16a34a;
+                border-color: #16a34a;
+            }
+            .search-box {
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto 30px;
+                position: relative;
+            }
+            .search-input {
+                width: 100%;
+                padding: 12px 16px 12px 44px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                color: #ffffff;
+                font-size: 14px;
+                outline: none;
+                transition: all 0.2s ease;
+            }
+            .search-input:focus {
+                border-color: rgba(34, 197, 94, 0.4);
+                background: rgba(255, 255, 255, 0.08);
+            }
+            .search-input::placeholder {
+                color: #6b7280;
+            }
+            .search-icon {
+                position: absolute;
+                left: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #6b7280;
+            }
+            .category-filter {
+                display: flex;
+                gap: 8px;
+                justify-content: center;
+                margin-bottom: 30px;
+                flex-wrap: wrap;
+            }
+            .filter-btn {
+                padding: 6px 12px;
+                background: rgba(255, 255, 255, 0.05);
+                color: #9ca3af;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 6px;
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                text-decoration: none;
+            }
+            .filter-btn:hover, .filter-btn.active {
+                background: rgba(34, 197, 94, 0.2);
+                color: #22c55e;
+                border-color: rgba(34, 197, 94, 0.4);
+            }
+            .back-to-home {
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                width: 44px;
+                height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(255, 255, 255, 0.1);
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 12px;
+                transition: all 0.2s ease;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            @media (max-width: 768px) {
+                .download-item {
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 16px;
+                }
+                .download-buttons {
+                    justify-content: flex-start;
+                }
+                .item-meta {
+                    margin-bottom: 16px;
+                }
+            }
+            .back-to-home:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-1px);
+            }
+        </style>
+    </head>
+    <body style="background-color: #17181c; color: #ffffff;">
+        <div class="rain-background"></div>
+        <a href="/" class="back-to-home">
+            <i data-lucide="arrow-left" class="w-5 h-5"></i>
+        </a>
+        <div class="container">
+            <div class="header">
+                <h1 style="font-size: 28px; font-weight: 600; margin: 0 0 8px 0;">Download Page - Hollow Dobt</h1>
+                <p style="color: #9ca3af; margin: 0;">Open source projects code and other resources</p>
+            </div>
+            <div class="search-box">
+                <div class="search-icon">
+                    <i data-lucide="search" class="w-3 h-3"></i>
+                </div>
+                <input type="text" class="search-input" placeholder="Search downloads..." id="searchInput">
+            </div>
+            <div class="category-filter">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="GitHub">GitHub</button>
+                <button class="filter-btn" data-category="MoePan">MoePan</button>
+            </div>
+            <div id="downloadsList">
+                <div class="download-item" data-category="GitHub" data-github-url="https://github.com/HollowDobt/catalog-index">
+                    <div class="item-content">
+                        <div class="item-header">
+                            <h3 class="item-title">
+                                <i data-lucide="github" class="w-5 h-5"></i>
+                                catalog-index Source Code
+                            </h3>
+                        </div>
+                        <p class="item-description">Loading...</p>
+                        <div class="item-meta">
+                            <div class="meta-item">
+                                <i data-lucide="star" class="w-3 h-3"></i>
+                                <span>- stars</span>
+                            </div>
+                            <div class="meta-item">
+                                <i data-lucide="git-branch" class="w-3 h-3"></i>
+                                <span>- forks</span>
+                            </div>
+                            <div class="meta-item">
+                                <i data-lucide="calendar" class="w-3 h-3"></i>
+                                <span>-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="download-buttons">
+                        <a href="https://github.com/HollowDobt/catalog-index" class="download-btn">
+                            <i data-lucide="github" class="w-4 h-4"></i>
+                            Source
+                        </a>
+                    </div>
+                </div>
+                <div class="download-item" data-category="GitHub" data-github-url="https://github.com/HollowDobt/docs-site">
+                    <div class="item-content">
+                        <div class="item-header">
+                            <h3 class="item-title">
+                                <i data-lucide="github" class="w-5 h-5"></i>
+                                doc-site
+                            </h3>
+                        </div>
+                        <p class="item-description">Loading...</p>
+                        <div class="item-meta">
+                            <div class="meta-item">
+                                <i data-lucide="star" class="w-3 h-3"></i>
+                                <span>- stars</span>
+                            </div>
+                            <div class="meta-item">
+                                <i data-lucide="git-branch" class="w-3 h-3"></i>
+                                <span>- forks</span>
+                            </div>
+                            <div class="meta-item">
+                                <i data-lucide="calendar" class="w-3 h-3"></i>
+                                <span>-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="download-buttons">
+                        <a href="https://github.com/HollowDobt/docs-site" class="download-btn">
+                            <i data-lucide="github" class="w-4 h-4"></i>
+                            Source
+                        </a>
+                    </div>
+                </div>
+                <div class="download-item" data-category="MoePan">
+                    <div class="item-content">
+                        <div class="item-header">
+                            <h3 class="item-title">
+                                <i data-lucide="book-open" class="w-5 h-5"></i>
+                                C.Henry Edwards David E.Penney Elementary Differential Equations 6th Edition.pdf
+                            </h3>
+                        </div>
+                        <p class="item-description"></p>
+                    </div>
+                    <div class="download-buttons">
+                        <a href="https://pan.moe/s/PE65Fr" class="download-btn primary">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            Download
+                        </a>
+                    </div>
+                </div>
+            
+        </div>
+            <div style="margin-top: 14px; text-align: center; font-size: 14px; color: #888; margin-bottom: 40px;">
+                &copy 2025 Hollow Dobt. All rights reserved. 
+                <a href="https://icp.gov.moe/?keyword=20257760" target="_blank" style="color: #888; text-decoration: none;">
+                    萌ICP备20257760号
+                </a>
+            </div>
+        </div>
+        <script>
+            lucide.createIcons();
+            
+            // Function to fetch GitHub repository information dynamically
+            async function fetchGitHubRepoInfo(repoUrl) {
+                try {
+                    // Extract owner/repo from the GitHub URL
+                    const match = repoUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/);
+                    if (!match) return null;
+                    
+                    const [, owner, repo] = match;
+                    const apiUrl = `https://api.github.com/repos/${owner}/${repo}`;
+                    
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) throw new Error('API request failed');
+                    
+                    const repoData = await response.json();
+                    
+                    return {
+                        stars: repoData.stargazers_count || 0,
+                        forks: repoData.forks_count || 0,
+                        updated: repoData.updated_at ? repoData.updated_at.split('T')[0] : '',
+                        description: repoData.description || ''
+                    };
+                } catch (error) {
+                    console.error('Failed to fetch GitHub repo info:', error);
+                    return null;
+                }
+            }
+            
+            // Function to update GitHub item with fetched data
+            function updateGitHubItem(item, data) {
+                const description = item.querySelector('.item-description');
+                const metaItems = item.querySelectorAll('.meta-item span');
+                
+                if (data) {
+                    // Update description
+                    description.textContent = data.description || 'No description available';
+                    
+                    // Update meta information
+                    if (metaItems.length >= 3) {
+                        metaItems[0].textContent = `${data.stars} stars`;
+                        metaItems[1].textContent = `${data.forks} forks`;
+                        metaItems[2].textContent = data.updated || 'Unknown';
+                    }
+                } else {
+                    // Show error state
+                    description.textContent = 'Unable to load repository information';
+                    if (metaItems.length >= 3) {
+                        metaItems[0].textContent = '- stars';
+                        metaItems[1].textContent = '- forks';
+                        metaItems[2].textContent = '-';
+                    }
+                }
+            }
+            
+            // Load GitHub data for all GitHub items on page load
+            async function loadGitHubData() {
+                const githubItems = document.querySelectorAll('[data-github-url]');
+                
+                // Process items with a small delay to avoid rate limiting
+                for (let i = 0; i < githubItems.length; i++) {
+                    const item = githubItems[i];
+                    const repoUrl = item.dataset.githubUrl;
+                    
+                    try {
+                        const data = await fetchGitHubRepoInfo(repoUrl);
+                        updateGitHubItem(item, data);
+                        
+                        // Add a small delay between requests to be nice to the API
+                        if (i < githubItems.length - 1) {
+                            await new Promise(resolve => setTimeout(resolve, 200));
+                        }
+                    } catch (error) {
+                        console.error(`Failed to load data for ${repoUrl}:`, error);
+                        updateGitHubItem(item, null);
+                    }
+                }
+            }
+            
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            const downloadItems = document.querySelectorAll('.download-item');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                downloadItems.forEach(item => {
+                    const title = item.querySelector('.item-title').textContent.toLowerCase();
+                    const description = item.querySelector('.item-description').textContent.toLowerCase();
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Category filtering
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    const category = this.dataset.category;
+                    downloadItems.forEach(item => {
+                        if (category === 'all' || item.dataset.category === category) {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                    // Clear search when switching categories
+                    searchInput.value = '';
+                });
+            });
+            
+            // Load GitHub data when the page loads
+            document.addEventListener('DOMContentLoaded', loadGitHubData);
+        </script>
+    </body>
+</html>
